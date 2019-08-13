@@ -16,3 +16,5 @@ To use this project, simply run `npm start` in the root directory, passing in th
 ```
 DARK_SKY_KEY="your dark sky api key" PORT=3001 GEOLOCATE_KEY="your opencage geocoder key" npm start
 ```
+# Live version
+[Click here to see the app in action.](https://evening-woodland-59316.herokuapp.com/)
