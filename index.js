@@ -62,7 +62,7 @@ app.get('/api/geocoder/:address', (req, res) => {
 app.use('/api/', apiLimiter);
 
 // Static routing for the basic files
-app.use(express.static(__dirname + '/client'));
+app.use('/', express.static(__dirname + '/client'));
 
 app.listen(config.port, () => {
   console.log(`Server listening on port ${config.port}`);
