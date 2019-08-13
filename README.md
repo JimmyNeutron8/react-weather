@@ -6,8 +6,7 @@ The app uses a simple express server to serve the webpage, with two special rout
 
 # Front end
 The front end is built using React. The React project is located in the `weather-react` directory inside the project root.
-The client folder in the project root is a symlink to the build folder in the React project. This allows for quicker development
-of both client and server simultaneously.
+The `client` folder in the project root is a duplicate of the `build` folder generate by the React build script.
 
 # APIs
 The server uses two APIs: Dark Sky API for fetching weather data, and OpenCage Geocoder.
