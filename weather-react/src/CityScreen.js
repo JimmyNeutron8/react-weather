@@ -5,7 +5,7 @@ const CityScreen = (props) => {
     <div>
       <h1>City Name</h1>
       <form onSubmit={props.onSubmit}>
-        <input type="text" placeholder="Start typing city..." onChange={props.onChange} />
+        <input type="text" placeholder="Enter city..." onChange={props.onChange} />
         <input class="button primary" type="submit" value="GO" />
       </form>
     </div>

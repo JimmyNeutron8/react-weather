@@ -4,6 +4,7 @@ import CityScreen from './CityScreen';
 import WeatherScreen from './WeatherScreen';
 import Footer from './Footer';
 import LoadingScreen from './LoadingScreen';
+import ErrorScreen from './ErrorScreen';
 import Icons from './icons';
 
 class App extends React.Component {
@@ -26,12 +27,15 @@ class App extends React.Component {
     this.handleClickCity = this.handleClickCity.bind(this);
     this.handleCitySubmit = this.handleCitySubmit.bind(this);
     this.handleCityChange = this.handleCityChange.bind(this);
+    this.handleStartOver = this.handleStartOver.bind(this);
   }
 
+  // Called when user selects 'Use current location'
   handleClickGeolocate () {
     this.setState({
       phase: 'loading-screen'
     });
+
     navigator.geolocation.getCurrentPosition((position) => {
       // Parse position stuff
       const location = {
@@ -45,6 +49,10 @@ class App extends React.Component {
           this.setState({
             weatherData: response,
             phase: 'weather-screen'
+          });
+        }else{
+          this.setState({
+            phase: 'error-screen'
           });
         }
       }, true);
@@ -77,8 +85,24 @@ class App extends React.Component {
           weatherData: response,
           phase: 'weather-screen'
         });
+      }else{
+        this.setState({
+          phase: 'error-screen'
+        });
       }
     }, false);
+  }
+
+  handleStartOver () {
+    if (navigator.geolocation) {
+      this.setState({
+        phase: 'input-screen'
+      });
+    }else{
+      this.setState({
+        phase: 'city-screen'
+      });
+    }
   }
 
   render () {
@@ -109,9 +133,15 @@ class App extends React.Component {
           <Footer />
         </div>
       );
-    }else{
+    }else if (this.state.phase === 'loading-screen') {
       return (
         <LoadingScreen />
+      );
+    }else{
+      return (
+        <div className="weather-app">
+          <ErrorScreen onClick={this.handleStartOver} />
+        </div>
       );
     }
   }
@@ -119,6 +149,13 @@ class App extends React.Component {
 
 // Call this to parse the weather data into what we need
 function parseWeatherData (response) {
+  if (response == undefined || response.currently == undefined) {
+    const data = {
+      success: false
+    }
+    return data;
+  }
+
   const data = {
     success: true,
     currentTemp: Math.round(response.currently.temperature),
@@ -145,6 +182,7 @@ function parseWeatherData (response) {
 }
 
 // Call this to request weather data from the backend
+// Coords is true if we are passing coordinates, false if we are passing city
 function requestWeatherData (location, callback, coords) {
   const xml = new XMLHttpRequest();
   xml.onreadystatechange = () => {

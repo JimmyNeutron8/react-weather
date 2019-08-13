@@ -11,7 +11,6 @@ const options = {
   provider: 'opencage',
   apiKey: config.geolocateKey
 };
-
 const geocoder = Geocoder(options);
 
 // Create the express app
@@ -41,6 +40,16 @@ app.get('/api/weather/address/:address', (req, res) => {
   const address = req.params.address;
 
   geocoder.geocode(address, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+
+    if (result == undefined || result == '' || result == null) {
+      console.log('The result was negligible!!');
+      res.send({});
+      return;
+    }
+
     const lat = result[0].latitude;
     const long = result[0].longitude;
 
@@ -50,15 +59,7 @@ app.get('/api/weather/address/:address', (req, res) => {
   });
 });
 
-app.get('/api/geocoder/:address', (req, res) => {
-  const address = req.params.address;
-  console.log(address);
-
-  geocoder.geocode(address, (err, result) => {
-    console.log('Result: ' + result);
-  });
-});
-
+// Use the api limiter
 app.use('/api/', apiLimiter);
 
 // Static routing for the basic files
