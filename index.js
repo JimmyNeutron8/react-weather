@@ -26,10 +26,6 @@ const apiLimiter = rateLimit({
   max: 20
 });
 
-// Static routing for the basic files
-app.use(express.static(__dirname + '/client'));
-app.use('/api/', apiLimiter);
-
 // Special routes for getting weather data
 app.get('/api/weather/coords/:location', (req, res) => {
   const location = JSON.parse(req.params.location);
@@ -62,6 +58,11 @@ app.get('/api/geocoder/:address', (req, res) => {
     console.log('Result: ' + result);
   });
 });
+
+app.use('/api/', apiLimiter);
+
+// Static routing for the basic files
+app.use(express.static(__dirname + '/client'));
 
 app.listen(config.port, () => {
   console.log(`Server listening on port ${config.port}`);
